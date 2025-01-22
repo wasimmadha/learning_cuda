@@ -10,7 +10,7 @@
 #define CEIL_DIV(M, N) (((M) + (N) - 1) / (N))
 
 // CUDA kernel for naive SGEMM implementation
-__global__ void sgemm_naive(int M, int N, int K, float alpha, const float *A,
+__global__ void sgemm_coaelsce(int M, int N, int K, float alpha, const float *A,
                            const float *B, float beta, float *C) {
     // compute position in C that this thread is responsible for
     // const uint x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -88,7 +88,7 @@ int main() {
     double start_time = get_time();
     
     // Launch kernel
-    sgemm_naive<<<gridDim, blockDim>>>(M, N, K, alpha, d_A, d_B, beta, d_C);
+    sgemm_coaelsce<<<gridDim, blockDim>>>(M, N, K, alpha, d_A, d_B, beta, d_C);
     
     // Synchronize and check timing
     cudaDeviceSynchronize();
